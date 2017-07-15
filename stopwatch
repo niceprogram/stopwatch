@@ -1,0 +1,32 @@
+long start_stopwatch;
+long stop_stopwatch;
+long time_measured;
+int speed;
+
+// this function start and stop the stopwatch and returns the difference
+void stopwatch() {
+  if (digitalRead(8) == LOW) {
+    start_stopwatch = millis();
+  } else if (digitalRead(7) == LOW) {
+    stop_stopwatch = millis();
+  }
+  time_measured = (stop_stopwatch - start_stopwatch) * 1000;
+  if (time_measured >= 0) {
+    speed = 1 / (time_measured * 4);
+    Serial.println((String("Speed") + String(speed) + String("m/s")));
+  }
+}
+
+
+void setup() {
+  pinMode(8, INPUT);
+  pinMode(7, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  while (0 == 0) {
+    stopwatch();
+  }
+
+}
