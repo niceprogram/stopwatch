@@ -1,30 +1,72 @@
 long start_stopwatch;
+int flag_in;
 long stop_stopwatch;
 long time_measured;
-int speed;
+long speedy;
+int flag_out;
 
-// this function start and stop the stopwatch and returns the difference
-void stopwatch() {
-  if (digitalRead(8) == LOW) {
-    start_stopwatch = millis();
-  } else if (digitalRead(7) == LOW) {
-    stop_stopwatch = millis();
-  }
-  time_measured = (stop_stopwatch - start_stopwatch) * 1000;
-  if (time_measured >= 0) {
-    speed = 1 / (time_measured * 4);
-    Serial.println((String("Speed") + String(speed) + String("m/s")));
-  }
-}
+// include the library code:
+#include <LiquidCrystal.h>
+
+// initialize the library with the numbers of the interface pins
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+
+
+//    Serial.println((String("time: ") + String(time_measured) + String("s")));
+//    lcd.setCursor(0, 1);
+ //   lcd.print("time:                  ");
+//    lcd.setCursor(0, 1);
+//    lcd.print((String("time: ") + String(time_measured) + String("s")));
+//    delay(3000);
+//    lcd.print(( String(" ok")));
+//    start_stopwatch = 0;
+///    stop_stopwatch = 0;
+//  }
+//}
 
 
 void setup() {
   pinMode(8, INPUT);
   pinMode(7, INPUT);
-  Serial.begin(9600);
+  //Serial.begin(9600);
+  // set up the LCD's number of columns and rows:
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  lcd.print("Speedworld!");
+  //Serial.println((String("Speedworld") ));
+}
+
+// this function start and stop the stopwatch and returns the difference
+void stopwatch() {
+  //Serial.println((String("flag in") + String(digitalRead(8)) + String(digitalRead(7))));
+  if ((flag_out == 1 && flag_in == 0) && digitalRead(8) == LOW) {
+    start_stopwatch = millis();
+    flag_in = 1;
+    flag_out = 0;
+    //Serial.println((String("flag in") + String(start_stopwatch) + String("s")));
+  } else if ((flag_in == 1 && flag_out == 0) && digitalRead(7) == LOW) {
+    flag_out = 1;
+    stop_stopwatch = millis();
+    time_measured = (stop_stopwatch - start_stopwatch) * 1;
+    speedy = time_measured;
+    //Serial.println((String("Speed") + String(speedy) + String("s")));
+
+    lcd.setCursor(0, 1);
+    lcd.print("             ");
+    // print the number of seconds since reset:
+    lcd.setCursor(0, 1);
+    lcd.print(speedy);
+    
+    delay(3000);
+    flag_in = 0;
+    lcd.print("   ok");
+  }
 }
 
 void loop() {
+  flag_out = 1;
+  flag_in = 0;
   while (0 == 0) {
     stopwatch();
   }
